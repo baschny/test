@@ -12,6 +12,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Show environment
+      - name: Debug Action
+        uses: hmarr/debug-action@v1.0.0
+
+      - name: Show release event infos
         run: |
-          env
+          echo "release.tag_name=${{ github.release.tag_name }}"
+          echo "release.target_commitish=${{ github.release.target_commitish }}"
+          echo "release.draft=${{ github.release.draft }}"
+          echo "release.prerelease=${{ github.release.prerelease }}"
+          echo "release.body=${{ github.release.body }}"
+
+      - uses: avakar/create-deployment@v1
+        with:
+          auto_merge: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
