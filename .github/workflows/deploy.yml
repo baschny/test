@@ -1,0 +1,17 @@
+name: Test workflow
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  test_environment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Show environment
+        run: |
+          env
