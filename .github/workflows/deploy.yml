@@ -1,3 +1,4 @@
+
 name: Test workflow
 
 on:
@@ -5,7 +6,29 @@ on:
     types: [published]
 
 jobs:
-  test_environment:
+  test-php:
+    runs-on: ubuntu-latest
+
+    container:
+      env:
+        COMPOSER_MAJOR_VERSION: 1
+      image: registry.cron.eu/docker/php-ci:php-7.2
+      options: --user 1001
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: check composer version
+        run: composer --version
+
+      - name: check current directory
+        run: |
+          pwd
+          ls -la
+          env
+
+  test-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,12 +39,18 @@ jobs:
         uses: hmarr/debug-action@v1.0.0
 
       - name: Show release event infos
+        env:
+          RELEASE_TAG: ${{ github.release.tag_name }}
+          RELEASE_COMMITISH: ${{ github.release.target_commitish }}
+          RELEASE_DRAFT: ${{ github.release.draft }}
+          RELEASE_PRERELEASE: ${{ github.release.prerelease }}
+          RELEASE_BODY: ${{ github.release.body }}
         run: |
-          echo "release.tag_name=${{ github.release.tag_name }}"
-          echo "release.target_commitish=${{ github.release.target_commitish }}"
-          echo "release.draft=${{ github.release.draft }}"
-          echo "release.prerelease=${{ github.release.prerelease }}"
-          echo "release.body=${{ github.release.body }}"
+          echo "release.tag_name=$RELEASE_TAG"
+          echo "release.target_commitish=$RELEASE_COMMITISH"
+          echo "release.draft=$RELEASE_DRAFT"
+          echo "release.prerelease=$RELEASE_PRERELEASE"
+          echo "release.body=$RELEASE_BODY"
 
       - uses: avakar/create-deployment@v1
         with:
