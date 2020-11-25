@@ -18,7 +18,7 @@ jobs:
         id: composer-config
         uses: ./.github/actions/composer
         with:
-          composer_version: ${COMPOSER_MAJOR_VERSION}
+          composer_version: ${{ env.COMPOSER_MAJOR_VERSION }}
           command: get_config
 
       - name: Cache Composer Downloads
@@ -31,5 +31,5 @@ jobs:
         id: composer-run
         uses: ./.github/actions/composer
         with:
-          composer_version: ${COMPOSER_MAJOR_VERSION}
+          composer_version: ${{ env.COMPOSER_MAJOR_VERSION }}
           action: install
