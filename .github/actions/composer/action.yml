@@ -41,19 +41,26 @@ runs:
         # Make sure the latest version is available, pull it quietly
         docker pull -q composer:${COMPOSER_VERSION}
 
+        # Extract the major version
         MAJOR_VERSION=$(docker run --rm composer:${COMPOSER_VERSION} --version | perl -pe '($_)=/\b(\d)\d*\.\d+\.\d+/;')
         echo "::set-output name=composer_cache_dir::${RUNNER_WORKSPACE}/composer/cache"
         echo "::set-output name=composer_major_version::${DETECT_COMPOSER_MAJOR_VERSION}"
 
-        if [ "${COMPOSER_COMMAND}" = "get_config" ]; then
-          exit
-        fi
+        case "${COMPOSER_COMMAND}" in
+          get_config)
+            echo "output composer_cache_dir=${RUNNER_WORKSPACE}/composer/cache"
+            echo "output composer_major_version=${DETECT_COMPOSER_MAJOR_VERSION}"
+            exit
+            ;;
 
-        docker run --rm \
-          --volume ${RUNNER_WORKSPACE}/composer:/tmp \
-          --volume ${GITHUB_WORKSPACE}:/app \
-          -w /app \
-          composer:${COMPOSER_VERSION} $COMPOSER_COMMAND $COMPOSER_ARGS
+          *)
+            docker run --rm \
+              --volume ${RUNNER_WORKSPACE}/composer:/tmp \
+              --volume ${GITHUB_WORKSPACE}:/app \
+              -w /app \
+              composer:${COMPOSER_VERSION} $COMPOSER_COMMAND $COMPOSER_ARGS
+            ;;
+        esac
 
 branding:
   icon: 'package'
