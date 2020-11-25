@@ -38,8 +38,6 @@ runs:
       run: |
         set -e
 
-        env | sort
-
         # Make sure the latest version is available, pull it quietly
         docker pull -q composer:${COMPOSER_VERSION}
 
