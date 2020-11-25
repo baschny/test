@@ -3,21 +3,33 @@ name: Test action
 on: [push]
 
 jobs:
+
   test-action:
     runs-on: ubuntu-latest
+
+    env:
+      COMPOSER_MAJOR_VERSION: ${COMPOSER_MAJOR_VERSION}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run our test action
-        id: composer-run
+      - name: Get Composer cache directory
+        id: composer-config
         uses: ./.github/actions/composer
         with:
-          composer_version: 1
+          composer_version: ${COMPOSER_MAJOR_VERSION}
+          command: get_config
 
       - name: Cache Composer Downloads
         uses: actions/cache@v2
         with:
-          path: ${{ steps.composer-run.outputs.composer-cache-dir }}
-          key: composer-v${{ steps.composer-run.outputs.composer-major-version }}
+          path: ${{ steps.composer-config.outputs.composer-cache-dir }}
+          key: composer-v${{ steps.composer-config.outputs.composer-major-version }}
+
+      - name: Run our test action
+        id: composer-run
+        uses: ./.github/actions/composer
+        with:
+          composer_version: ${COMPOSER_MAJOR_VERSION}
+          action: install

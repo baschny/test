@@ -1,4 +1,4 @@
-name: 'Composer (action)'
+name: 'PHP Composer'
 description: 'Use the Composer CLI in your Github Actions.'
 
 inputs:
@@ -8,14 +8,14 @@ inputs:
     required: false
 
   command:
-    description: "Composer command to run"
+    description: "Composer command to run (or get_config to just get the output vars)"
     required: true
     default: install
 
   args:
     description: "Command line arguments to composer"
     required: false
-    default: "--optimize-autoloader"
+    default: "--optimize-autoloader --no-progress"
 
 outputs:
   composer-cache-dir:
@@ -38,18 +38,22 @@ runs:
       run: |
         set -ex
 
+        # Make sure the latest version is available, pull it quietly
         docker pull -q composer:$COMPOSER_VERSION
 
-        DETECT_COMPOSER_MAJOR_VERSION=$(docker run --rm composer:$COMPOSER_VERSION --version | perl -pe '($_)=/\b(\d)\d*\.\d+\.\d+/;')
+        MAJOR_VERSION=$(docker run --rm composer:$COMPOSER_VERSION --version | perl -pe '($_)=/\b(\d)\d*\.\d+\.\d+/;')
+        echo "::set-output name=composer-cache-dir::${RUNNER_WORKSPACE}/composer/cache"
+        echo "::set-output name=composer-major-version::${DETECT_COMPOSER_MAJOR_VERSION}"
+
+        if [ "$COMPOSER_ACTION" -eq "get_config" ]; then
+          exit
+        fi
 
         docker run --rm \
           --volume ${RUNNER_WORKSPACE}/composer:/tmp \
           --volume ${GITHUB_WORKSPACE}:/app \
           -w /app \
           composer:$COMPOSER_VERSION $COMPOSER_COMMAND $COMPOSER_ARGS
-
-        echo "::set-output name=composer-cache-dir::${RUNNER_WORKSPACE}/composer"
-        echo "::set-output name=composer-major-version::${DETECT_COMPOSER_MAJOR_VERSION}"
 
 branding:
   icon: 'package'
