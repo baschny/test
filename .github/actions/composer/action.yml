@@ -47,7 +47,7 @@ runs:
         echo "::set-output name=composer-cache-dir::${RUNNER_WORKSPACE}/composer/cache"
         echo "::set-output name=composer-major-version::${DETECT_COMPOSER_MAJOR_VERSION}"
 
-        if [ "$COMPOSER_ACTION" -eq "get_config" ]; then
+        if [ "${COMPOSER_COMMAND}" -eq "get_config" ]; then
           exit
         fi
 
