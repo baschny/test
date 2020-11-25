@@ -30,12 +30,19 @@ runs:
         id
         env | sort
         pwd
+
+        docker run --rm \
+          --volume ${RUNNER_WORKSPACE}/.composer:/tmp \
+          --volume ${GITHUB_WORKSPACE}:/app \
+          -w /app --rm \
+          composer:$COMPOSER_VERSION config cache-files-dir
+
         docker run --rm \
           --volume ${RUNNER_WORKSPACE}/.composer:/tmp \
           --volume ${GITHUB_WORKSPACE}:/app \
           -w /app --rm \
           composer:$COMPOSER_VERSION $COMPOSER_COMMAND $COMPOSER_ARGS
-        find ${COMPOSER_HOME} -ls
+        find ${RUNNER_WORKSPACE} -ls
 
 branding:
   icon: 'package'
