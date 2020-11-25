@@ -24,7 +24,7 @@ outputs:
 
   composer_major_version:
     description: "Major version of the composer run"
-    value: ${{ steps.composer_run.outputs.composer_cache_dir }}
+    value: ${{ steps.composer_run.outputs.composer_major_version }}
 
 runs:
   using: "composite"
