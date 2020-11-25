@@ -1,0 +1,10 @@
+{
+    "name": "ernst/test",
+    "authors": [
+        {
+            "name": "Ernesto Baschny",
+            "email": "eb@cron.eu"
+        }
+    ],
+    "require": {}
+}

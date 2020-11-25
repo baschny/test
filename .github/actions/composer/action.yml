@@ -20,7 +20,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: $GITHUB_ACTION_PATH/run.sh
+    - run: |
+        set -ex
+        uid
+        env | sort
+        docker run -v $GITHUB_WORKSPACE:/src -w /src --rm \
+          composer:${{ input.composer_version }} ${{ input.command }} ${{ input.args }}
       shell: bash
 
 branding:
