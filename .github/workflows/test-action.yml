@@ -11,6 +11,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run our test action
+        id: composer-run
         uses: ./.github/actions/composer
         with:
           composer_version: 1
+
+      - name: Cache Composer Downloads
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-run.outputs.composer-cache-dir }}
+          key: composer-v${{ steps.composer-run.outputs.composer-major-version }}

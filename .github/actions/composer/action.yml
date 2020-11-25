@@ -17,6 +17,15 @@ inputs:
     required: false
     default: "--optimize-autoloader"
 
+outputs:
+  composer-cache-dir:
+    description: "Where composer created its cache"
+    value: ${{ steps.composer-run.outputs.composer-cache-dir }}
+
+  composer-major-version:
+    description: "Major version of the composer run"
+    value: ${{ steps.composer-run.outputs.composer-major-version }}
+
 runs:
   using: "composite"
   steps:
@@ -25,24 +34,22 @@ runs:
         COMPOSER_COMMAND: ${{ inputs.command }}
         COMPOSER_ARGS: ${{ inputs.args }}
       shell: bash
+      id: composer-run
       run: |
         set -ex
-        id
-        env | sort
-        pwd
+
+        docker pull -q composer:$COMPOSER_VERSION
+
+        DETECT_COMPOSER_MAJOR_VERSION=$(docker run --rm composer:$COMPOSER_VERSION --version | perl -pe '($_)=/\b(\d)\d*\.\d+\.\d+/;')
 
         docker run --rm \
-          --volume ${RUNNER_WORKSPACE}/.composer:/tmp \
+          --volume ${RUNNER_WORKSPACE}/composer:/tmp \
           --volume ${GITHUB_WORKSPACE}:/app \
-          -w /app --rm \
-          composer:$COMPOSER_VERSION config cache-files-dir
-
-        docker run --rm \
-          --volume ${RUNNER_WORKSPACE}/.composer:/tmp \
-          --volume ${GITHUB_WORKSPACE}:/app \
-          -w /app --rm \
+          -w /app \
           composer:$COMPOSER_VERSION $COMPOSER_COMMAND $COMPOSER_ARGS
-        find ${RUNNER_WORKSPACE} -ls
+
+        echo "::set-output name=composer-cache-dir::${RUNNER_WORKSPACE}/composer"
+        echo "::set-output name=composer-major-version::${DETECT_COMPOSER_MAJOR_VERSION}
 
 branding:
   icon: 'package'
