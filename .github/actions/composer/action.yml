@@ -49,7 +49,7 @@ runs:
           composer:$COMPOSER_VERSION $COMPOSER_COMMAND $COMPOSER_ARGS
 
         echo "::set-output name=composer-cache-dir::${RUNNER_WORKSPACE}/composer"
-        echo "::set-output name=composer-major-version::${DETECT_COMPOSER_MAJOR_VERSION}
+        echo "::set-output name=composer-major-version::${DETECT_COMPOSER_MAJOR_VERSION}"
 
 branding:
   icon: 'package'
