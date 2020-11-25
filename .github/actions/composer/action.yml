@@ -38,8 +38,10 @@ runs:
       run: |
         set -ex
 
+        env | sort
+
         # Make sure the latest version is available, pull it quietly
-        docker pull -q composer:$COMPOSER_VERSION
+        docker pull -q composer:${COMPOSER_VERSION}
 
         MAJOR_VERSION=$(docker run --rm composer:$COMPOSER_VERSION --version | perl -pe '($_)=/\b(\d)\d*\.\d+\.\d+/;')
         echo "::set-output name=composer-cache-dir::${RUNNER_WORKSPACE}/composer/cache"
