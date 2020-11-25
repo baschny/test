@@ -29,11 +29,10 @@ runs:
         set -ex
         id
         env | sort
-        COMPOSER_HOME=$GITHUB_WORKSPACE/.composer
         pwd
         docker run --rm \
-          --volume ${COMPOSER_HOME}:/tmp \
-          --volume $GITHUB_WORKSPACE:/app
+          --volume ${RUNNER_WORKSPACE}/.composer:/tmp \
+          --volume ${GITHUB_WORKSPACE}:/app \
           -w /app --rm \
           composer:$COMPOSER_VERSION $COMPOSER_COMMAND $COMPOSER_ARGS
         find ${COMPOSER_HOME} -ls
