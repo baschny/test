@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      COMPOSER_VERSION: ${COMPOSER_VERSION}
+      COMPOSER_VERSION: 1
 
     steps:
       - name: Checkout repository
