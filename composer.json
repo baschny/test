@@ -6,5 +6,7 @@
             "email": "eb@cron.eu"
         }
     ],
-    "require": {}
+    "require": {
+        "symfony/console": "^5.1"
+    }
 }

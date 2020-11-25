@@ -24,14 +24,19 @@ runs:
         COMPOSER_VERSION: ${{ inputs.composer_version }}
         COMPOSER_COMMAND: ${{ inputs.command }}
         COMPOSER_ARGS: ${{ inputs.args }}
+      shell: bash
       run: |
         set -ex
         id
         env | sort
-        echo VERSION: ${{ inputs.composer_version }}
-        docker run -v $GITHUB_WORKSPACE:/src -w /src --rm \
+        COMPOSER_HOME=$GITHUB_WORKSPACE/.composer
+        pwd
+        docker run --rm \
+          --volume ${COMPOSER_HOME}:/tmp \
+          --volume $GITHUB_WORKSPACE:/app
+          -w /app --rm \
           composer:$COMPOSER_VERSION $COMPOSER_COMMAND $COMPOSER_ARGS
-      shell: bash
+        find ${COMPOSER_HOME} -ls
 
 branding:
   icon: 'package'
