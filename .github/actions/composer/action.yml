@@ -18,13 +18,13 @@ inputs:
     default: "--optimize-autoloader --no-progress"
 
 outputs:
-  composer-cache-dir:
+  composer_cache_dir:
     description: "Where composer created its cache"
-    value: ${{ steps.composer-run.outputs.composer-cache-dir }}
+    value: ${{ steps.composer_run.outputs.composer_cache_dir }}
 
-  composer-major-version:
+  composer_major_version:
     description: "Major version of the composer run"
-    value: ${{ steps.composer-run.outputs.composer-major-version }}
+    value: ${{ steps.composer_run.outputs.composer_cache_dir }}
 
 runs:
   using: "composite"
@@ -34,9 +34,9 @@ runs:
         COMPOSER_COMMAND: ${{ inputs.command }}
         COMPOSER_ARGS: ${{ inputs.args }}
       shell: bash
-      id: composer-run
+      id: composer_run
       run: |
-        set -ex
+        set -e
 
         env | sort
 
@@ -44,8 +44,8 @@ runs:
         docker pull -q composer:${COMPOSER_VERSION}
 
         MAJOR_VERSION=$(docker run --rm composer:${COMPOSER_VERSION} --version | perl -pe '($_)=/\b(\d)\d*\.\d+\.\d+/;')
-        echo "::set-output name=composer-cache-dir::${RUNNER_WORKSPACE}/composer/cache"
-        echo "::set-output name=composer-major-version::${DETECT_COMPOSER_MAJOR_VERSION}"
+        echo "::set-output name=composer_cache_dir::${RUNNER_WORKSPACE}/composer/cache"
+        echo "::set-output name=composer_major_version::${DETECT_COMPOSER_MAJOR_VERSION}"
 
         if [ "${COMPOSER_COMMAND}" = "get_config" ]; then
           exit
