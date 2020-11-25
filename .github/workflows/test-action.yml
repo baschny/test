@@ -11,6 +11,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name: check composer version
-        uses: .github/actions/composer
+        uses: ./.github/actions/composer
         with:
           composer_version: 1
