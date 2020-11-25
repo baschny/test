@@ -21,9 +21,9 @@ runs:
   using: "composite"
   steps:
     - env:
-        COMPOSER_VERSION: ${{ input.composer_version }}
-        COMPOSER_COMMAND: ${{ input.command }}
-        COMPOSER_ARGS: ${{ input.args }}
+        COMPOSER_VERSION: ${{ inputs.composer_version }}
+        COMPOSER_COMMAND: ${{ inputs.command }}
+        COMPOSER_ARGS: ${{ inputs.args }}
       run: |
         set -ex
         uid
