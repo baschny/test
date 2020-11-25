@@ -26,8 +26,9 @@ runs:
         COMPOSER_ARGS: ${{ inputs.args }}
       run: |
         set -ex
-        uid
+        id
         env | sort
+        echo VERSION: ${{ inputs.composer_version }}
         docker run -v $GITHUB_WORKSPACE:/src -w /src --rm \
           composer:$COMPOSER_VERSION $COMPOSER_COMMAND $COMPOSER_ARGS
       shell: bash

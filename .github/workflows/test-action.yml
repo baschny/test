@@ -10,7 +10,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: check composer version
+      - name: Run our test action
         uses: ./.github/actions/composer
         with:
           composer_version: 1
