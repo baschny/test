@@ -44,12 +44,12 @@ runs:
         # Extract the major version
         MAJOR_VERSION=$(docker run --rm composer:${COMPOSER_VERSION} --version | perl -pe '($_)=/\b(\d)\d*\.\d+\.\d+/;')
         echo "::set-output name=composer_cache_dir::${RUNNER_WORKSPACE}/composer/cache"
-        echo "::set-output name=composer_major_version::${DETECT_COMPOSER_MAJOR_VERSION}"
+        echo "::set-output name=composer_major_version::${MAJOR_VERSION}"
 
         case "${COMPOSER_COMMAND}" in
           get_config)
             echo "output composer_cache_dir=${RUNNER_WORKSPACE}/composer/cache"
-            echo "output composer_major_version=${DETECT_COMPOSER_MAJOR_VERSION}"
+            echo "output composer_major_version=${MAJOR_VERSION}"
             exit
             ;;
 
