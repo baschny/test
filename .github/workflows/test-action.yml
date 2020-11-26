@@ -14,21 +14,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Get Composer cache directory
+      - name: Get composer cache directory
         id: composer_config
-        uses: ./.github/actions/composer
+        uses: baschny/action-php-composer
         with:
           composer_version: ${{ env.COMPOSER_VERSION }}
           command: get_config
 
-      - name: Cache Composer Downloads
+      - name: Cache composer downloads
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer_config.outputs.composer_cache_dir }}
           key: composer-v${{ steps.composer_config.outputs.composer_major_version }}
 
-      - name: Run our composer install action
-        uses: ./.github/actions/composer
+      - name: Run composer install
+        uses: baschny/action-php-composer
         with:
           composer_version: ${{ env.COMPOSER_VERSION }}
           command: install
