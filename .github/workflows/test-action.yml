@@ -16,7 +16,7 @@ jobs:
 
       - name: Get composer cache directory
         id: composer_config
-        uses: baschny/php-composer-action
+        uses: baschny/php-composer-action@master
         with:
           composer_version: ${{ env.COMPOSER_VERSION }}
           command: get_config
@@ -28,7 +28,7 @@ jobs:
           key: composer-v${{ steps.composer_config.outputs.composer_major_version }}
 
       - name: Run composer install
-        uses: baschny/php-composer-action
+        uses: baschny/php-composer-action@master
         with:
           composer_version: ${{ env.COMPOSER_VERSION }}
           command: install
