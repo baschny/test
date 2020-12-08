@@ -16,6 +16,15 @@ jobs:
       - name: Debug Action
         uses: hmarr/debug-action@v1.0.0
 
+      - name: start deployment
+        uses: bobheadxi/deployments@v0.4.3
+        id: deployment
+        with:
+          step: start
+          desc: ${{ github.event.release.tag_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: production
+
       - name: Show release event infos
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
@@ -30,9 +39,11 @@ jobs:
           echo "release.prerelease=$RELEASE_PRERELEASE"
           echo "release.body=$RELEASE_BODY"
 
-      - uses: avakar/create-deployment@v1
+      - name: update deployment status (success)
+        uses: bobheadxi/deployments@v0.4.3
+        if: ${{ success() }}
         with:
-          auto_merge: false
-          environment: test
-        env:
-          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
