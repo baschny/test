@@ -6,28 +6,6 @@ on:
     types: [published]
 
 jobs:
-  test-php:
-    runs-on: ubuntu-latest
-
-    container:
-      env:
-        COMPOSER_MAJOR_VERSION: 1
-      image: registry.cron.eu/docker/php-ci:php-7.2
-      options: --user 1001
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: check composer version
-        run: composer --version
-
-      - name: check current directory
-        run: |
-          pwd
-          ls -la
-          env
-
   test-release:
     runs-on: ubuntu-latest
 
