@@ -18,20 +18,14 @@ jobs:
 
       - name: Show release event infos
         env:
-          RELEASE_TAG: ${{ github.release.tag_name }}
-          RELEASE_COMMITISH: ${{ github.release.target_commitish }}
-          RELEASE_DRAFT: ${{ github.release.draft }}
-          RELEASE_PRERELEASE: ${{ github.release.prerelease }}
-          RELEASE_BODY: ${{ github.release.body }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_COMMITISH: ${{ github.event.release.target_commitish }}
+          RELEASE_DRAFT: ${{ github.event.release.draft }}
+          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+          RELEASE_BODY: ${{ github.event.release.body }}
         run: |
           echo "release.tag_name=$RELEASE_TAG"
           echo "release.target_commitish=$RELEASE_COMMITISH"
           echo "release.draft=$RELEASE_DRAFT"
           echo "release.prerelease=$RELEASE_PRERELEASE"
           echo "release.body=$RELEASE_BODY"
-
-      - uses: avakar/create-deployment@v1
-        with:
-          auto_merge: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
