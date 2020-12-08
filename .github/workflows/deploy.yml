@@ -29,3 +29,10 @@ jobs:
           echo "release.draft=$RELEASE_DRAFT"
           echo "release.prerelease=$RELEASE_PRERELEASE"
           echo "release.body=$RELEASE_BODY"
+
+      - uses: avakar/create-deployment@v1
+        with:
+          auto_merge: false
+          environment: test
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
