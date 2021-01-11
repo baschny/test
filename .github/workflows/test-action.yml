@@ -11,13 +11,10 @@ jobs:
       COMPOSER_VERSION: 2
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Get composer cache directory
         id: composer_config
         #uses: ./.github/actions/composer
-        uses: baschny/php-composer-action@v1
+        uses: baschny/php-composer-action@1
         with:
           composer_version: ${{ env.COMPOSER_VERSION }}
           command: get_config
@@ -31,7 +28,7 @@ jobs:
 
       - name: Run composer install
         #uses: ./.github/actions/composer
-        uses: baschny/php-composer-action@v1
+        uses: baschny/php-composer-action@1
         with:
           composer_version: ${{ env.COMPOSER_VERSION }}
           command: install
