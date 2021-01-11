@@ -73,6 +73,7 @@ runs:
             docker run --rm \
               --volume ${RUNNER_WORKSPACE}/composer:/tmp \
               --volume ${GITHUB_WORKSPACE}:/app \
+              --user 1001 \
               -w /app \
               composer:${COMPOSER_VERSION} $COMPOSER_COMMAND $COMPOSER_ARGS
             ;;
