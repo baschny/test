@@ -1,5 +1,11 @@
 {
     "name": "ernst/test",
+    "repositories": {
+        "neos-davptaheute-frontend": {
+            "type": "git",
+            "url": "https://github.com/cron-eu/davptaheute-frontend"
+        }
+    },
     "authors": [
         {
             "name": "Ernesto Baschny",
@@ -7,6 +13,7 @@
         }
     ],
     "require": {
-        "symfony/console": "^5.1"
+        "neos/neos": "^4.3",
+        "cron/neos-davptaheute-frontend": "dev-master"
     }
 }
