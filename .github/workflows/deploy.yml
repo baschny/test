@@ -1,4 +1,3 @@
-
 name: Test deploy workflow
 
 on:
@@ -10,28 +9,6 @@ on:
         default: 'staging'
 
 jobs:
-  test-php:
-    runs-on: ubuntu-latest
-
-    container:
-      env:
-        COMPOSER_MAJOR_VERSION: 1
-      image: registry.cron.eu/docker/php-ci:php-7.2
-      options: --user 1001
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: check composer version
-        run: composer --version
-
-      - name: check current directory
-        run: |
-          pwd
-          ls -la
-          env
-
   test-release:
     runs-on: ubuntu-latest
 
@@ -46,12 +23,14 @@ jobs:
 
       - name: Show release event infos
         env:
+          ENV: ${{ github.event.inputs.environment }}
           RELEASE_TAG: ${{ github.release.tag_name }}
           RELEASE_COMMITISH: ${{ github.release.target_commitish }}
           RELEASE_DRAFT: ${{ github.release.draft }}
           RELEASE_PRERELEASE: ${{ github.release.prerelease }}
           RELEASE_BODY: ${{ github.release.body }}
         run: |
+          echo "env=$ENV"
           echo "release.tag_name=$RELEASE_TAG"
           echo "release.target_commitish=$RELEASE_COMMITISH"
           echo "release.draft=$RELEASE_DRAFT"
@@ -61,5 +40,6 @@ jobs:
       - uses: avakar/create-deployment@v1
         with:
           auto_merge: false
+          environment: ${{ github.event.inputs.environment }}
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
