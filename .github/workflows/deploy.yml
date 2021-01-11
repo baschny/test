@@ -2,8 +2,12 @@
 name: Test workflow
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The environment to which to deploy the code (staging or live)'
+        required: true
+        default: 'staging'
 
 jobs:
   test-php:
