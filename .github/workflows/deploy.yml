@@ -1,9 +1,12 @@
-
-name: Test workflow
+name: Test deploy workflow
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The environment to which to deploy the code (staging or live)'
+        required: true
+        default: 'staging'
 
 jobs:
   test-release:
@@ -13,8 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Debug Action
-        uses: hmarr/debug-action@v1.0.0
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
       - name: start deployment
         uses: bobheadxi/deployments@v0.4.3
@@ -27,23 +32,23 @@ jobs:
 
       - name: Show release event infos
         env:
+          ENV: ${{ github.event.inputs.environment }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
           RELEASE_COMMITISH: ${{ github.event.release.target_commitish }}
           RELEASE_DRAFT: ${{ github.event.release.draft }}
           RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
           RELEASE_BODY: ${{ github.event.release.body }}
         run: |
+          echo "env=$ENV"
           echo "release.tag_name=$RELEASE_TAG"
           echo "release.target_commitish=$RELEASE_COMMITISH"
           echo "release.draft=$RELEASE_DRAFT"
           echo "release.prerelease=$RELEASE_PRERELEASE"
           echo "release.body=$RELEASE_BODY"
 
-      - name: update deployment status (success)
-        uses: bobheadxi/deployments@v0.4.3
-        if: ${{ success() }}
+      - uses: avakar/create-deployment@v1
         with:
-          step: finish
-          token: ${{ secrets.GITHUB_TOKEN }}
-          status: ${{ job.status }}
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          auto_merge: false
+          environment: ${{ github.event.inputs.environment }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
