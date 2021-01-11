@@ -16,8 +16,8 @@ jobs:
 
       - name: Get composer cache directory
         id: composer_config
-        uses: ./.github/actions/composer
-        #uses: baschny/php-composer-action@v1
+        #uses: ./.github/actions/composer
+        uses: baschny/php-composer-action@v1
         with:
           composer_version: ${{ env.COMPOSER_VERSION }}
           command: get_config
@@ -30,8 +30,8 @@ jobs:
           key: composer-v${{ steps.composer_config.outputs.composer_major_version }}
 
       - name: Run composer install
-        uses: ./.github/actions/composer
-        #uses: baschny/php-composer-action@v1
+        #uses: ./.github/actions/composer
+        uses: baschny/php-composer-action@v1
         with:
           composer_version: ${{ env.COMPOSER_VERSION }}
           command: install

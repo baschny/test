@@ -63,10 +63,6 @@ runs:
             composer:${COMPOSER_VERSION} config -g github-oauth.github.com $GITHUB_OAUTH
         fi
 
-        echo "composer config:"
-        docker run --rm --volume ${RUNNER_WORKSPACE}/composer:/tmp \
-          composer:${COMPOSER_VERSION} config -g --list
-
         case "${COMPOSER_COMMAND}" in
           get_config)
             exit
