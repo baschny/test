@@ -65,7 +65,7 @@ runs:
 
         echo "composer config:"
         docker run --rm --volume ${RUNNER_WORKSPACE}/composer:/tmp \
-          composer:${COMPOSER_VERSION} config --list
+          composer:${COMPOSER_VERSION} config -g --list
 
         case "${COMPOSER_COMMAND}" in
           get_config)
