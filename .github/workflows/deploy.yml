@@ -26,7 +26,6 @@ jobs:
         id: deployment
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
-          target_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
           environment: production
 
       - name: Deploy my app
@@ -38,7 +37,7 @@ jobs:
         uses: altinukshini/deployment-status@releases/v1
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
-          target_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
+          environment_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
           state: "success"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
@@ -47,7 +46,7 @@ jobs:
         uses: altinukshini/deployment-status@releases/v1
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
-          target_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
+          environment_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
           state: "failure"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
