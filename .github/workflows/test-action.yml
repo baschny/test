@@ -16,6 +16,7 @@ jobs:
 
       - name: Test versions
         run: |
+          set -ex
           make --version || true
           docker --version || true
           aws --version || true
