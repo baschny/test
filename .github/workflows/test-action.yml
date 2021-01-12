@@ -26,6 +26,7 @@ jobs:
           grep VERSION= /etc/os-release || true
           pwd
           ls -la
+          git describe --tags
 
       - name: Get composer cache directory
         id: composer_config
