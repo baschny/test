@@ -14,6 +14,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Test versions
+        run: |
+          make --version || true
+          docker --version || true
+          aws --version || true
+          php --version || true
+          composer --version || true
+          node --version || true
+          grep VERSION= /etc/os-release || true
+
       - name: Get composer cache directory
         id: composer_config
         uses: ./.github/actions/composer
