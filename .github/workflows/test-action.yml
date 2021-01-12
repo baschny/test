@@ -14,7 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Find a descriptive git tag for our images
+        id: tagger
+        uses: jimschubert/query-tag-action@v1
+
       - name: Test versions
+        env:
+          TAG: ${{steps.tagger.outputs.tag}}
         run: |
           set -ex
           make --version || true
@@ -26,7 +32,7 @@ jobs:
           grep VERSION= /etc/os-release || true
           pwd
           ls -la
-          git describe --tags
+          echo "TAG: $TAG"
 
       - name: Get composer cache directory
         id: composer_config
