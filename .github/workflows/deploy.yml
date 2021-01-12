@@ -21,34 +21,33 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
 
-      - name: start deployment
-        uses: bobheadxi/deployments@v0.4.3
+      - uses: altinukshini/deployment-action@releases/v1
+        name: Create GitHub deployment
         id: deployment
         with:
-          step: start
-          desc: ${{ github.event.release.tag_name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          env: production
+          token: ${{ secrets.DEPLOY_TOKEN }}
+          target_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
+          environment: production
 
-      - name: Show release event infos
-        env:
-          ENV: ${{ github.event.inputs.environment }}
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-          RELEASE_COMMITISH: ${{ github.event.release.target_commitish }}
-          RELEASE_DRAFT: ${{ github.event.release.draft }}
-          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
-          RELEASE_BODY: ${{ github.event.release.body }}
+      - name: Deploy my app
         run: |
-          echo "env=$ENV"
-          echo "release.tag_name=$RELEASE_TAG"
-          echo "release.target_commitish=$RELEASE_COMMITISH"
-          echo "release.draft=$RELEASE_DRAFT"
-          echo "release.prerelease=$RELEASE_PRERELEASE"
-          echo "release.body=$RELEASE_BODY"
+          # add your deployment code here
 
-      - uses: avakar/create-deployment@v1
+      - name: Update deployment status (success)
+        if: success()
+        uses: altinukshini/deployment-status@releases/v1
         with:
-          auto_merge: false
-          environment: ${{ github.event.inputs.environment }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+          token: ${{ secrets.DEPLOY_TOKEN }}
+          target_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: altinukshini/deployment-status@releases/v1
+        with:
+          token: ${{ secrets.DEPLOY_TOKEN }}
+          target_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
