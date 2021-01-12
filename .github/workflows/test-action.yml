@@ -13,13 +13,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Unshallow
-        run: git fetch --prune --unshallow
-
       - name: Find a descriptive git tag for our images
         id: tagger
         uses: jimschubert/query-tag-action@v1
+        with:
+          include: '*'
+          abbrev: 1
 
       - name: Test versions
         env:
