@@ -50,5 +50,6 @@ jobs:
         uses: altinukshini/deployment-status@releases/v1
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
+          environment_url: ${{ env.TARGET_URL }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
           state: "failure"

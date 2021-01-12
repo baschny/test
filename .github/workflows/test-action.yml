@@ -24,6 +24,8 @@ jobs:
           composer --version || true
           node --version || true
           grep VERSION= /etc/os-release || true
+          pwd
+          ls -la
 
       - name: Get composer cache directory
         id: composer_config
