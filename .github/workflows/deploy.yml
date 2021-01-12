@@ -7,6 +7,8 @@ on:
         description: 'The environment to which to deploy the code (staging or live)'
         required: true
         default: 'staging'
+  release:
+    types: [published]
 
 jobs:
   test-release:
