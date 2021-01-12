@@ -31,20 +31,16 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
 
-      - name: "Environment chooser: Pre-Release"
-        if: github.event_name == 'release' && github.event.release.prerelease
+      - name: "Environment chooser by event type"
         id: environment
-        run: echo "::set-output name=name::$ENVIRONMENT_PRERELEASE"
-
-      - name: "Environment chooser: Release"
-        if: github.event_name == 'release' && ! github.event.release.prerelease
-        id: environment
-        run: echo "::set-output name=name::$ENVIRONMENT_RELEASE"
-
-      - name: "Environment chooser: Manual selected"
-        if: github.event_name == 'workflow_dispatch'
-        id: environment
-        run: echo "::set-output name=name::${{ github.event.inputs.environment }}"
+        run: |
+          if [ "${{ github.event_name }}" -eq "release" -a "${{ github.event.release.prerelease }}" -eq "false" ]; then
+            echo "::set-output name=name::$ENVIRONMENT_RELEASE"
+          elif [ "${{ github.event_name }}" -eq "release" -a "${{ github.event.release.prerelease }}" -eq "true" ]; then
+            echo "::set-output name=name::$ENVIRONMENT_PRERELEASE"
+          else
+            echo "::set-output name=name::${{ github.event.inputs.environment }}"
+          fi
 
       - name: Print out environment name
         env:
