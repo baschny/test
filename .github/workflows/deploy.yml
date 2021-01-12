@@ -12,6 +12,9 @@ jobs:
   test-release:
     runs-on: ubuntu-latest
 
+    env:
+      TARGET_URL: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -26,7 +29,8 @@ jobs:
         id: deployment
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
-          environment: production
+          environment: ${{ github.event.inputs.environment }}
+          environment_url: ${{ env.TARGET_URL }}
 
       - name: Deploy my app
         run: |
@@ -37,16 +41,13 @@ jobs:
         uses: altinukshini/deployment-status@releases/v1
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
-          environment_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
-          state: "success"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          state: "success"
 
       - name: Update deployment status (failure)
         if: failure()
         uses: altinukshini/deployment-status@releases/v1
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
-          environment_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
-          state: "failure"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-
+          state: "failure"
