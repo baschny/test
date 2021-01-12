@@ -7,10 +7,15 @@ on:
         description: 'The environment to which to deploy the code (staging or live)'
         required: true
         default: 'staging'
+  release:
+    types: [published]
 
 jobs:
   test-release:
     runs-on: ubuntu-latest
+
+    env:
+      TARGET_URL: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
 
     steps:
       - name: Checkout repository
@@ -26,27 +31,27 @@ jobs:
         id: deployment
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
-          environment: production
+          environment: ${{ github.event.inputs.environment }}
 
       - name: Deploy my app
         run: |
           # add your deployment code here
+          exit 1
 
       - name: Update deployment status (success)
         if: success()
         uses: altinukshini/deployment-status@releases/v1
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
-          environment_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
-          state: "success"
+          environment_url: ${{ env.TARGET_URL }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          state: "success"
 
       - name: Update deployment status (failure)
         if: failure()
         uses: altinukshini/deployment-status@releases/v1
         with:
           token: ${{ secrets.DEPLOY_TOKEN }}
-          environment_url: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
-          state: "failure"
+          environment_url: ${{ env.TARGET_URL }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-
+          state: "failure"

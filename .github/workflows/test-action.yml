@@ -13,6 +13,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
       - name: Test versions
         run: |
@@ -24,6 +31,8 @@ jobs:
           composer --version || true
           node --version || true
           grep VERSION= /etc/os-release || true
+          #git fetch -f origin ${{ github.ref }}:${{ github.ref }}
+          git describe --tags
 
       - name: Get composer cache directory
         id: composer_config
