@@ -26,6 +26,10 @@ jobs:
 
       - name: "Test API"
         run: |
-          curl --header "Authorization: Bearer $GITHUB_TOKEN" -s https://api.github.com/repos/cron-eu/clitools/releases/latest
-          latest_url=$(curl --header "Authorization: Bearer $GITHUB_TOKEN" -s https://api.github.com/repos/cron-eu/clitools/releases/latest | jq -r ".assets[].browser_download_url")
+          GITHUB_AUTH=""
+          if [ ! -z "${GITHUB_TOKEN}" ]; then
+            GITHUB_AUTH="--header 'Authorization: Bearer "${GITHUB_TOKEN}"'"
+          fi
+          curl $GITHUB_AUTH -s https://api.github.com/repos/cron-eu/clitools/releases/latest
+          latest_url=$(curl $GITHUB_AUTH -s https://api.github.com/repos/cron-eu/clitools/releases/latest | jq -r ".assets[].browser_download_url")
           echo "url=$latest_url"
