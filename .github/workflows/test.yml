@@ -1,0 +1,33 @@
+name: Test workflow
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      TARGET_URL: https://neos-${{ github.event.inputs.environment }}.ptaheute.de
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: "Debug github auth"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh auth status
+
+      - name: "Test API"
+        run: |
+          curl --header 'authorization: Bearer "$GITHUB_TOKEN" -s https://api.github.com/repos/cron-eu/clitools/releases/latest
+          latest_url=$(curl --header 'authorization: Bearer "$GITHUB_TOKEN" -s https://api.github.com/repos/cron-eu/clitools/releases/latest | jq -r ".assets[].browser_download_url")
+          echo "url=$latest_url"
